@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog API | Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 2rem;
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3b82f6, #f97316, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* Grille */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Cartes */
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0f172a;
+            border-left: 3px solid #3b82f6;
+            padding-left: 0.8rem;
+        }
+
+        /* Champs de formulaire */
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            color: #1e293b;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        /* Boutons */
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f97316;
+        }
+
+        .btn-secondary:hover {
+            background: #ea580c;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            transform: none;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Groupes de boutons */
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* Barre de recherche */
+        .search-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-row input {
+            flex: 1;
+            margin: 0;
+        }
+
+        .search-row button {
+            width: auto;
+            padding: 0 1.2rem;
+        }
+
+        /* Filtres */
+        .filter-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group input {
+            flex: 1;
+            margin: 0;
+        }
+
+        /* Grille des articles */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        /* Carte article */
+        .article-card {
+            background: #ffffff;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .article-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .article-id {
+            font-size: 0.7rem;
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-family: monospace;
+            color: #475569;
+        }
+
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 0.8rem 0;
+            font-size: 0.7rem;
+        }
+
+        .meta-badge {
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            color: #475569;
+        }
+
+        .article-content {
+            font-size: 0.85rem;
+            color: #475569;
+            margin: 0.8rem 0;
+            line-height: 1.4;
+            max-height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .article-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .article-actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            width: auto;
+        }
+
+        /* États vides */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem;
+            color: #94a3b8;
+            background: #f8fafc;
+            border-radius: 1rem;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #3b82f6;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            background: #10b981;
+            color: white;
+        }
+
+        .notification.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📄 Blog API</h1>
+            <p>Gestion complète des articles | Interface de test</p>
+        </div>
+
+        <div class="grid">
+            <!-- Création d'article -->
+            <div class="card">
+                <h2>✏️ Nouvel article</h2>
+                <input type="text" id="titre" placeholder="Titre *">
+                <textarea id="contenu" placeholder="Contenu *"></textarea>
+                <input type="text" id="auteur" placeholder="Auteur *">
+                <input type="date" id="date">
+                <input type="text" id="categorie" placeholder="Catégorie">
+                <input type="text" id="tags" placeholder="Tags (séparés par des virgules)">
+                <button onclick="createArticle()">Publier l'article</button>
+            </div>
+
+            <!-- Recherche et Filtres -->
+            <div class="card">
+                <h2>🔍 Rechercher</h2>
+                <div class="search-row">
+                    <input type="text" id="searchQuery" placeholder="Rechercher dans titre ou contenu...">
+                    <button class="btn-secondary" onclick="searchArticles()" style="width: auto;">🔎</button>
+                </div>
+                <button onclick="loadArticles()" class="btn-outline">Afficher tous les articles</button>
+                
+                <h2 style="margin-top: 1.2rem;">🎯 Filtrer</h2>
+                <div class="filter-group">
+                    <input type="text" id="filterCategorie" placeholder="Catégorie">
+                    <input type="text" id="filterAuteur" placeholder="Auteur">
+                    <input type="date" id="filterDate" placeholder="Date">
+                </div>
+                <button onclick="filterArticles()" class="btn-secondary">Appliquer les filtres</button>
+            </div>
+        </div>
+
+        <!-- Liste des articles -->
+        <div class="card" style="margin-top: 0;">
+            <h2>📚 Articles</h2>
+            <div id="articles" class="articles-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // Charger au démarrage
+        loadArticles();
+
+        async function loadArticles() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_URL}/articles`);
+                const articles = await response.json();
+                displayArticles(articles);
+            } catch (error) {
+                console.error('Erreur:', error);
+                displayError();
+            }
+        }
+
+        async function createArticle() {
+            const article = {
+                titre: document.getElementById('titre').value,
+                contenu: document.getElementById('contenu').value,
+                auteur: document.getElementById('auteur').value,
+                date: document.getElementById('date').value || new Date().toISOString().split('T')[0],
+                categorie: document.getElementById('categorie').value,
+                tags: document.getElementById('tags').value
+            };
+
+            if (!article.titre || !article.auteur) {
+                showNotification('Titre et auteur sont obligatoires', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/articles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(article)
+                });
+                
+                if (response.ok) {
+                    showNotification('Article créé avec succès', 'success');
+                    clearForm();
+                    loadArticles();
+                } else {
+                    const error = await response.json();
+                    showNotification('Erreur: ' + (error.message || 'Problème serveur'), 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur de connexion au serveur', 'error');
+            }
+        }
+
+        async function deleteArticle(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+                try {
+                    const response = await fetch(`${API_URL}/articles/${id}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        showNotification('Article supprimé', 'success');
+                        loadArticles();
+                    } else {
+                        showNotification('Erreur lors de la suppression', 'error');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                }
+            }
+        }
+
+        async function searchArticles() {
+            const query = document.getElementById('searchQuery').value;
+            if (!query) {
+                loadArticles();
+                return;
+            }
+
+            showLoading();
+            try {
+                const response = await fetch(`${API_URL}/articles/search?query=${encodeURIComponent(query)}`);
+                const articles = await response.json();
+                displayArticles(articles);
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function filterArticles() {
+            const categorie = document.getElementById('filterCategorie').value;
+            const auteur = document.getElementById('filterAuteur').value;
+            const date = document.getElementById('filterDate').value;
+
+            let url = `${API_URL}/articles?`;
+            const params = [];
+            if (categorie) params.push(`categorie=${encodeURIComponent(categorie)}`);
+            if (auteur) params.push(`auteur=${encodeURIComponent(auteur)}`);
+            if (date) params.push(`date=${encodeURIComponent(date)}`);
+            url += params.join('&');
+
+            showLoading();
+            try {
+                const response = await fetch(url);
+                const articles = await response.json();
+                displayArticles(articles);
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        async function editArticle(id) {
+            const nouveauTitre = prompt('Nouveau titre :');
+            const nouveauContenu = prompt('Nouveau contenu :');
+            const nouvelleCategorie = prompt('Nouvelle catégorie :');
+            const nouveauxTags = prompt('Nouveaux tags :');
+
+            if (nouveauTitre || nouveauContenu || nouvelleCategorie || nouveauxTags) {
+                const updatedArticle = {};
+                if (nouveauTitre) updatedArticle.titre = nouveauTitre;
+                if (nouveauContenu) updatedArticle.contenu = nouveauContenu;
+                if (nouvelleCategorie) updatedArticle.categorie = nouvelleCategorie;
+                if (nouveauxTags) updatedArticle.tags = nouveauxTags;
+
+                try {
+                    const response = await fetch(`${API_URL}/articles/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedArticle)
+                    });
+                    
+                    if (response.ok) {
+                        showNotification('Article modifié', 'success');
+                        loadArticles();
+                    } else {
+                        showNotification('Erreur lors de la modification', 'error');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                }
+            }
+        }
+
+        function displayArticles(articles) {
+            const container = document.getElementById('articles');
+            
+            if (!articles || articles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Aucun article trouvé</p>
+                        <p style="font-size: 0.8rem;">Créez votre premier article</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = articles.map(article => `
+                <div class="article-card">
+                    <div class="article-title">
+                        <span>${escapeHtml(article.titre) || 'Sans titre'}</span>
+                        <span class="article-id">#${article.id}</span>
+                    </div>
+                    <div class="article-meta">
+                        <span class="meta-badge">👤 ${escapeHtml(article.auteur) || 'Anonyme'}</span>
+                        <span class="meta-badge">📅 ${article.date || '—'}</span>
+                        ${article.categorie ? `<span class="meta-badge">🏷️ ${escapeHtml(article.categorie)}</span>` : ''}
+                        ${article.tags ? `<span class="meta-badge">🔖 ${escapeHtml(article.tags)}</span>` : ''}
+                    </div>
+                    <div class="article-content">
+                        ${escapeHtml(article.contenu) || 'Aucun contenu'}
+                    </div>
+                    <div class="article-actions">
+                        <button class="btn-success" onclick="editArticle(${article.id})">Modifier</button>
+                        <button class="btn-danger" onclick="deleteArticle(${article.id})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showLoading() {
+            const container = document.getElementById('articles');
+            container.innerHTML = '<div class="loading">Chargement des articles...</div>';
+        }
+
+        function displayError() {
+            const container = document.getElementById('articles');
+            container.innerHTML = '<div class="empty-state">⚠️ Erreur de connexion. Vérifiez que le serveur est lancé.</div>';
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function clearForm() {
+            document.getElementById('titre').value = '';
+            document.getElementById('contenu').value = '';
+            document.getElementById('auteur').value = '';
+            document.getElementById('date').value = '';
+            document.getElementById('categorie').value = '';
+            document.getElementById('tags').value = '';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
