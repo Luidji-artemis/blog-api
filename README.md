@@ -70,7 +70,7 @@ blog-api/
 ### 1. Cloonage du dépôt GitHub
 
 ```bash
-git clone https://github.com/TON-LIEN.git
+git remote add origin https://github.com/Luidji-artemis/blog-api
 cd blog-api
 ```
 
